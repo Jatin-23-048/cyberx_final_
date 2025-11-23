@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Required for reset
 import 'providers/app_state.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
@@ -13,6 +14,14 @@ import 'screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // --- TEMPORARY: RESET FOR TESTING ---
+  // This clears all saved data (Login, Settings) every time you restart the app.
+  // Comment this out when you want to keep your login session!
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear(); 
+  // -------------------------------------
+
   runApp(const DigitalDefenseApp());
 }
 
@@ -27,79 +36,61 @@ class DigitalDefenseApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AppState()),
       ],
       child: Consumer<AppState>(
-        builder: (context, state, _) {
-          final lightTheme = ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: const Color(0xFFF6F7FB),
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF1e7dd6),
-              elevation: 0,
-              centerTitle: false,
-            ),
-            textTheme: GoogleFonts.interTextTheme(
-              Theme.of(context).textTheme,
-            ),
-            colorScheme: ColorScheme.light(
-              primary: const Color(0xFF1e7dd6),
-              primaryContainer: const Color(0xFF1565c0),
-              secondary: const Color(0xFF1e7dd6),
-              tertiary: const Color(0xFF10b981),
-              surface: const Color(0xFFFFFFFF),
-              error: const Color(0xFFef4444),
-              outline: const Color(0xFF3f4451),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1e7dd6),
-                foregroundColor: Colors.white,
-              ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: const Color(0xFF1e7dd6)),
-            ),
-          );
-
-          final darkTheme = ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: const Color(0xFF1a1a1a),
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF1e7dd6),
-              elevation: 0,
-              centerTitle: false,
-            ),
-            textTheme: GoogleFonts.interTextTheme(
-              Theme.of(context).textTheme,
-            ),
-            colorScheme: ColorScheme.dark(
-              primary: const Color(0xFF1e7dd6),
-              primaryContainer: const Color(0xFF1565c0),
-              secondary: const Color(0xFF1e7dd6),
-              tertiary: const Color(0xFF10b981),
-              surface: const Color(0xFF252f3d),
-              surfaceContainer: const Color(0xFF1f2937),
-              error: const Color(0xFFef4444),
-              outline: const Color(0xFF3f4451),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1e7dd6),
-                foregroundColor: Colors.white,
-              ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: const Color(0xFF1e7dd6)),
-            ),
-          );
-
+        builder: (context, appState, _) {
           return MaterialApp(
             title: 'CyberX',
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: state.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
-            home: const AuthWrapper(),
             debugShowCheckedModeBanner: false,
+            themeMode: appState.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+            
+            // --- LIGHT THEME ---
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.light,
+              scaffoldBackgroundColor: const Color(0xFFF3F4F6), // Light Grey
+              cardColor: Colors.white,
+              primaryColor: const Color(0xFF1e7dd6),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1e7dd6),
+                elevation: 0,
+                iconTheme: IconThemeData(color: Colors.white),
+                titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme).apply(
+                bodyColor: const Color(0xFF1F2937), // Dark Grey text
+                displayColor: const Color(0xFF111827), // Nearly Black text
+              ),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF1e7dd6),
+                brightness: Brightness.light,
+                surface: Colors.white,
+                onSurface: const Color(0xFF1F2937),
+              ),
+            ),
+
+            // --- DARK THEME (Your Original Design) ---
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: const Color(0xFF1a1a1a),
+              cardColor: const Color(0xFF252f3d),
+              primaryColor: const Color(0xFF1e7dd6),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1e7dd6),
+                elevation: 0,
+                centerTitle: false,
+              ),
+              textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).apply(
+                bodyColor: Colors.white,
+                displayColor: Colors.white,
+              ),
+              colorScheme: ColorScheme.dark(
+                primary: const Color(0xFF1e7dd6),
+                surface: const Color(0xFF252f3d),
+                onSurface: Colors.white,
+                error: const Color(0xFFef4444),
+              ),
+            ),
+            home: const AuthWrapper(),
           );
         },
       ),
@@ -123,15 +114,8 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-class MainApp extends StatefulWidget {
+class MainApp extends StatelessWidget {
   const MainApp({Key? key}) : super(key: key);
-
-  @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  int _currentIndex = 0;
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -144,44 +128,33 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() => _currentIndex = index);
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF0a0a0a),
-        selectedItemColor: const Color(0xFF1e7dd6),
-        unselectedItemColor: const Color(0xFF90A4AE),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return Consumer<AppState>(
+      builder: (context, state, _) {
+        return Scaffold(
+          body: _screens[state.currentTabIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: state.currentTabIndex,
+            onTap: (index) => state.setTabIndex(index),
+            type: BottomNavigationBarType.fixed,
+            // Dynamic Colors based on Theme
+            backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                ? const Color(0xFF0a0a0a) 
+                : Colors.white,
+            selectedItemColor: const Color(0xFF1e7dd6),
+            unselectedItemColor: Theme.of(context).brightness == Brightness.dark 
+                ? const Color(0xFF90A4AE) 
+                : Colors.grey,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'Alerts'),
+              BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Learn'),
+              BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Community'),
+              BottomNavigationBarItem(icon: Icon(Icons.flag), label: 'Report'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.warning),
-            label: 'Alerts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Learn',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum),
-            label: 'Community',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flag),
-            label: 'Report',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

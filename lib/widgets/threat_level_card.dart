@@ -11,6 +11,8 @@ class ThreatLevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getColorForLevel(threatLevel);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final contentTextColor = isDark ? Colors.white : Colors.black;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -33,7 +35,7 @@ class ThreatLevelCard extends StatelessWidget {
               Text(
                 'Current Threat Level',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
+                  color: contentTextColor,
                 ),
               ),
             ],
@@ -43,14 +45,14 @@ class ThreatLevelCard extends StatelessWidget {
             threatLevel,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: color,
+              color: contentTextColor,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Increased phishing activity detected globally',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.white,
+              color: contentTextColor,
             ),
           ),
           const SizedBox(height: 12),
@@ -58,12 +60,13 @@ class ThreatLevelCard extends StatelessWidget {
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               backgroundColor: color,
+              foregroundColor: contentTextColor,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 8,
               ),
             ),
-            child: const Text('View Details'),
+            child: Text('View Details', style: TextStyle(color: contentTextColor)),
           ),
         ],
       ),

@@ -17,6 +17,8 @@ class AppState extends ChangeNotifier {
   
   double _securityScore = 78;
   String _currentThreatLevel = 'Medium';
+  // Navigation index for main app bottom navigation
+  int _currentTabIndex = 0;
   
   // NEW: State for user preferences
   bool _isEmailNotificationEnabled = true;
@@ -27,6 +29,14 @@ class AppState extends ChangeNotifier {
   bool get isEmailNotificationEnabled => _isEmailNotificationEnabled;
   bool get isPushNotificationEnabled => _isPushNotificationEnabled;
   bool get isDarkModeEnabled => _isDarkModeEnabled;
+  // Getter for bottom navigation index
+  int get currentTabIndex => _currentTabIndex;
+
+  // Setter method to update tab index and persist if needed
+  void setTabIndex(int index) {
+    _currentTabIndex = index;
+    notifyListeners();
+  }
 
   AppState() {
     _initializePrefs();
