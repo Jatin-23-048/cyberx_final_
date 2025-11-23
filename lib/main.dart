@@ -26,33 +26,82 @@ class DigitalDefenseApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AppState()),
       ],
-      child: MaterialApp(
-        title: 'Digital Defense',
-        theme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: const Color(0xFF1a1a1a),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF1e7dd6),
-            elevation: 0,
-            centerTitle: false,
-          ),
-          textTheme: GoogleFonts.interTextTheme(
-            Theme.of(context).textTheme,
-          ),
-          colorScheme: ColorScheme.dark(
-            primary: const Color(0xFF1e7dd6),
-            primaryContainer: const Color(0xFF1565c0),
-            secondary: const Color(0xFF1e7dd6),
-            tertiary: const Color(0xFF10b981),
-            surface: const Color(0xFF252f3d),
-            surfaceContainer: const Color(0xFF1f2937),
-            error: const Color(0xFFef4444),
-            outline: const Color(0xFF3f4451),
-          ),
-        ),
-        home: const AuthWrapper(),
-        debugShowCheckedModeBanner: false,
+      child: Consumer<AppState>(
+        builder: (context, state, _) {
+          final lightTheme = ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: const Color(0xFFF6F7FB),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF1e7dd6),
+              elevation: 0,
+              centerTitle: false,
+            ),
+            textTheme: GoogleFonts.interTextTheme(
+              Theme.of(context).textTheme,
+            ),
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFF1e7dd6),
+              primaryContainer: const Color(0xFF1565c0),
+              secondary: const Color(0xFF1e7dd6),
+              tertiary: const Color(0xFF10b981),
+              surface: const Color(0xFFFFFFFF),
+              error: const Color(0xFFef4444),
+              outline: const Color(0xFF3f4451),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1e7dd6),
+                foregroundColor: Colors.white,
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: const Color(0xFF1e7dd6)),
+            ),
+          );
+
+          final darkTheme = ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: const Color(0xFF1a1a1a),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF1e7dd6),
+              elevation: 0,
+              centerTitle: false,
+            ),
+            textTheme: GoogleFonts.interTextTheme(
+              Theme.of(context).textTheme,
+            ),
+            colorScheme: ColorScheme.dark(
+              primary: const Color(0xFF1e7dd6),
+              primaryContainer: const Color(0xFF1565c0),
+              secondary: const Color(0xFF1e7dd6),
+              tertiary: const Color(0xFF10b981),
+              surface: const Color(0xFF252f3d),
+              surfaceContainer: const Color(0xFF1f2937),
+              error: const Color(0xFFef4444),
+              outline: const Color(0xFF3f4451),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1e7dd6),
+                foregroundColor: Colors.white,
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: const Color(0xFF1e7dd6)),
+            ),
+          );
+
+          return MaterialApp(
+            title: 'CyberX',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: state.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+            home: const AuthWrapper(),
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
     );
   }

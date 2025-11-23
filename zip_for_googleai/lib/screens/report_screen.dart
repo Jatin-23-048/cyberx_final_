@@ -27,16 +27,10 @@ class _ReportScreenState extends State<ReportScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(
-              child: Text(
-                'CyberX',
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 8),
+            const Text('Digital Defense', style: TextStyle(color: Colors.white)),
             Text(
               'Stay Secure',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -1,0 +1,13 @@
+linter:
+  rules:
+    - camel_case_types
+    - camel_case_extensions
+    - library_names
+    - file_names
+    - library_prefixes
+    - non_constant_identifier_names
+    - constant_identifier_names
+    - empty_catches
+    - empty_constructor_bodies
+    - implementation_imports
+    - prefer_void_to_future

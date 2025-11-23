@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: const Center(
                     child: Text(
-                      'CX',
+                      'DD',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'CyberX',
+                  'Digital Defense',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

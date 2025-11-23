@@ -17,16 +17,6 @@ class AppState extends ChangeNotifier {
   
   double _securityScore = 78;
   String _currentThreatLevel = 'Medium';
-  
-  // NEW: State for user preferences
-  bool _isEmailNotificationEnabled = true;
-  bool _isPushNotificationEnabled = true;
-  bool _isDarkModeEnabled = false;
-
-  // NEW: Getters for settings
-  bool get isEmailNotificationEnabled => _isEmailNotificationEnabled;
-  bool get isPushNotificationEnabled => _isPushNotificationEnabled;
-  bool get isDarkModeEnabled => _isDarkModeEnabled;
 
   AppState() {
     _initializePrefs();
@@ -35,56 +25,6 @@ class AppState extends ChangeNotifier {
   Future<void> _initializePrefs() async {
     _prefs = await SharedPreferences.getInstance();
     _loadMockData();
-    // NEW: Load settings on startup
-    _loadSettings();
-  }
-
-  void _loadSettings() {
-    _isEmailNotificationEnabled = _prefs.getBool('emailNotifications') ?? true;
-    _isPushNotificationEnabled = _prefs.getBool('pushNotifications') ?? true;
-    _isDarkModeEnabled = _prefs.getBool('darkMode') ?? false;
-    // Note: Dark Mode functionality must be implemented in main.dart's MaterialApp
-    // if you want the switch to change the app theme globally.
-  }
-
-  // NEW: Reset the app to initial state (clears stored data and reloads mocks)
-  Future<void> resetApp() async {
-    await _prefs.clear();
-    _threats = [];
-    _courses = [];
-    _discussions = [];
-    _reports = [];
-    _securityScore = 78;
-    _currentThreatLevel = 'Medium';
-    _isEmailNotificationEnabled = true;
-    _isPushNotificationEnabled = true;
-    _isDarkModeEnabled = false;
-    // Recreate mock data
-    _addMockThreats();
-    _addMockCourses();
-    _addMockDiscussions();
-    notifyListeners();
-  }
-
-  // NEW: Toggle methods for ProfileScreen
-  Future<void> toggleEmailNotifications(bool value) async {
-    _isEmailNotificationEnabled = value;
-    await _prefs.setBool('emailNotifications', value);
-    notifyListeners();
-  }
-
-  Future<void> togglePushNotifications(bool value) async {
-    _isPushNotificationEnabled = value;
-    await _prefs.setBool('pushNotifications', value);
-    notifyListeners();
-  }
-
-  Future<void> toggleDarkMode(bool value) async {
-    _isDarkModeEnabled = value;
-    await _prefs.setBool('darkMode', value);
-    // You would typically call a method to rebuild the MaterialApp here,
-    // but we will apply the fix in main.dart next.
-    notifyListeners();
   }
 
   void _loadMockData() {
@@ -103,7 +43,6 @@ class AppState extends ChangeNotifier {
   void _addMockThreats() {
     final uuid = Uuid();
     final threats = [
-      // ... (Mock data creation remains the same)
       Threat(
         id: uuid.v4(),
         title: 'Banking Trojan Campaign',
@@ -167,7 +106,6 @@ class AppState extends ChangeNotifier {
   void _addMockCourses() {
     final uuid = Uuid();
     final courses = [
-      // ... (Mock data creation remains the same)
       Course(
         id: uuid.v4(),
         title: 'Password Security Fundamentals',
@@ -233,7 +171,6 @@ class AppState extends ChangeNotifier {
   void _addMockDiscussions() {
     final uuid = Uuid();
     final discussions = [
-      // ... (Mock data creation remains the same)
       Discussion(
         id: uuid.v4(),
         title: 'How to recognize suspicious emails?',
